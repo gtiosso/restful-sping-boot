@@ -32,4 +32,18 @@ public class UserRepository {
 		}
 		return null;
 	}
+	
+	public void updateUser(User obj) {
+		for (User user : userList) {
+			if (obj.getId() == user.getId()) {
+				user.setName(obj.getName());
+				user.setEmail(obj.getEmail());
+				user.setBirthDate(obj.getBirthDate());
+			}
+		}
+	}
+	
+	public void removeUser(Integer id) {
+		userList.removeIf(x -> x.getId() == id);
+	}
 }

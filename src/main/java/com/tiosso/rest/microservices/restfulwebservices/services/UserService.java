@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.tiosso.rest.microservices.restfulwebservices.domain.User;
 import com.tiosso.rest.microservices.restfulwebservices.repository.UserRepository;
+import com.tiosso.rest.microservices.restfulwebservices.resources.exceptions.ObjectNotFoundException;
 
 @Service
 public class UserService {
@@ -25,7 +26,19 @@ public class UserService {
 	}
 	
 	public User findById(Integer id) {
-		return repo.findById(id);
+		User obj = repo.findById(id);
+		if (obj == null) {
+			throw new ObjectNotFoundException("ERRO: Object Not Found - ID - " + id);
+		}
+		return obj;
+	}
+	
+	public void updateUser(User obj) {
+		repo.updateUser(obj);
+	}
+	
+	public void removeUser(Integer id) {
+		repo.removeUser(id);
 	}
 	
 }

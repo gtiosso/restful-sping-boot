@@ -10,10 +10,14 @@ import com.tiosso.rest.microservices.restfulwebservices.domain.User;
 @Component
 public class UserRepository {
 	
+	private Integer idCounter = 0;
 	private List<User> userList = new ArrayList<>();
 	
-	public void addUser(User obj){		
-		userList.add(obj);
+	public void addUser(User obj){
+		if (obj.getId() == null) {
+			obj.setId(++idCounter);
+			userList.add(obj);
+		}
 	}
 	
 	public List<User> findAll(){

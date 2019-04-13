@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.tiosso.rest.microservices.restfulwebservices.domain.User;
 import com.tiosso.rest.microservices.restfulwebservices.repository.UserRepository;
 import com.tiosso.rest.microservices.restfulwebservices.services.exceptions.BadRequestException;
+import com.tiosso.rest.microservices.restfulwebservices.services.exceptions.ConflictException;
 import com.tiosso.rest.microservices.restfulwebservices.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -21,7 +22,7 @@ public class UserService {
 	public void addUser(User obj) {
 		// Validando se email ja existe
 		if(repo.findAll().stream().anyMatch(x -> x.getEmail().equals(obj.getEmail()))) { 
-			throw new BadRequestException("ERROR: Bad Request  - Email already exist");
+			throw new ConflictException("ERROR: Conflict  - Email already exist");
 		}
 		// Validando se campos estão nulos
 		if (obj.getName() == null) {

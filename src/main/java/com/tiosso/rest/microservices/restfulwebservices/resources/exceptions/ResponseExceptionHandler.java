@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.tiosso.rest.microservices.restfulwebservices.services.exceptions.BadRequestException;
+import com.tiosso.rest.microservices.restfulwebservices.services.exceptions.ConflictException;
 import com.tiosso.rest.microservices.restfulwebservices.services.exceptions.ObjectNotFoundException;
 
 // ControllerAdvice replica o metodo para todos os controladores rest
@@ -38,6 +39,19 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 				System.currentTimeMillis(), 
 				status.value(), 
 				"Bad Rquest", 
+				e.getMessage(), 
+				request.getRequestURI());
+		
+		return ResponseEntity.status(status).body(err);
+	}
+	
+	@ExceptionHandler(ConflictException.class)
+	public ResponseEntity<StandardError> conflict(ConflictException e, HttpServletRequest request){
+		HttpStatus status = HttpStatus.CONFLICT;
+		StandardError err = new StandardError(
+				System.currentTimeMillis(), 
+				status.value(), 
+				"Conflict", 
 				e.getMessage(), 
 				request.getRequestURI());
 		

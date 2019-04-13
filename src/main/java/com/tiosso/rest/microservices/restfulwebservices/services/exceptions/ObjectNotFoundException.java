@@ -1,4 +1,4 @@
-package com.tiosso.rest.microservices.restfulwebservices.resources.exceptions;
+package com.tiosso.rest.microservices.restfulwebservices.services.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

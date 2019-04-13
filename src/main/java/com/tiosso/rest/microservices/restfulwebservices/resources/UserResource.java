@@ -49,7 +49,7 @@ public class UserResource {
 		service.findById(id);
 		obj.setId(id);
 		service.updateUser(obj);
-		return ResponseEntity.accepted().build();
+		return ResponseEntity.ok().build();
 	}
 	
 	@DeleteMapping(path = "/{id}")

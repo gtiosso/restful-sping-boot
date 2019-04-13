@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import com.tiosso.rest.microservices.restfulwebservices.domain.User;
 import com.tiosso.rest.microservices.restfulwebservices.repository.UserRepository;
 
+// Declara que esta classe possui metodos que dever ser gerados no momento da inicializacao
 @Configuration
 public class Instantiation implements CommandLineRunner {
 

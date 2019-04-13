@@ -1,7 +1,7 @@
 package com.tiosso.rest.microservices.restfulwebservices.resources;
 
 import java.net.URI;
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +26,8 @@ public class UserResource {
 	private UserService service;
 	
 	@GetMapping
-	public ResponseEntity<List<User>> findAll() {
-		List<User> list = service.findAll();
+	public ResponseEntity<Set<User>> findAll() {
+		Set<User> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 	

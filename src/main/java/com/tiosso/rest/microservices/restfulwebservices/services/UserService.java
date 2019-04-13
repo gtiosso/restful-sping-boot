@@ -1,12 +1,13 @@
 package com.tiosso.rest.microservices.restfulwebservices.services;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tiosso.rest.microservices.restfulwebservices.domain.User;
 import com.tiosso.rest.microservices.restfulwebservices.repository.UserRepository;
+import com.tiosso.rest.microservices.restfulwebservices.services.exceptions.BadRequestException;
 import com.tiosso.rest.microservices.restfulwebservices.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -18,17 +19,32 @@ public class UserService {
 	
 	
 	public void addUser(User obj) {
+		// Validando se email ja existe
+		if(repo.findAll().stream().anyMatch(x -> x.getEmail().equals(obj.getEmail()))) { 
+			throw new BadRequestException("ERROR: Bad Request  - Email already exist");
+		}
+		// Validando se campos estão nulos
+		if (obj.getName() == null) {
+			throw new BadRequestException("ERROR: Bad Request  - Field name is null");
+		}
+		if (obj.getEmail() == null) {
+			throw new BadRequestException("ERROR: Bad Request  - Field email is null");
+		}
+		if (obj.getBirthDate() == null) {
+			throw new BadRequestException("ERROR: Bad Request  - Field birthDate is null");
+		}
 		repo.addUser(obj);
 	}
 	
-	public List<User> findAll(){
+	public Set<User> findAll(){
 		return repo.findAll();
 	}
 	
 	public User findById(Integer id) {
 		User obj = repo.findById(id);
+		// Validando se usuario existe
 		if (obj == null) {
-			throw new ObjectNotFoundException("ERRO: Object Not Found - ID: " + id);
+			throw new ObjectNotFoundException("ERROR: Object Not Found - ID: " + id);
 		}
 		return obj;
 	}

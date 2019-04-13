@@ -1,7 +1,9 @@
 package com.tiosso.rest.microservices.restfulwebservices.repository;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -11,21 +13,22 @@ import com.tiosso.rest.microservices.restfulwebservices.domain.User;
 public class UserRepository {
 	
 	private Integer idCounter = 0;
+	private Set<User> userSet = new HashSet<>();
 	private List<User> userList = new ArrayList<>();
 	
 	public void addUser(User obj){
 		if (obj.getId() == null) {
 			obj.setId(++idCounter);
-			userList.add(obj);
+			userSet.add(obj);
 		}
 	}
 	
-	public List<User> findAll(){
-		return userList;
+	public Set<User> findAll(){
+		return userSet;
 	}
 	
 	public User findById(Integer id) {
-		for (User obj : userList) {
+		for (User obj : userSet) {
 			if (obj.getId() == id) {
 				return obj;
 			}
@@ -34,7 +37,7 @@ public class UserRepository {
 	}
 	
 	public void updateUser(User obj) {
-		for (User user : userList) {
+		for (User user : userSet) {
 			if (obj.getId() == user.getId()) {
 				user.setName(obj.getName());
 				user.setEmail(obj.getEmail());

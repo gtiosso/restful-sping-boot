@@ -57,5 +57,17 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		return ResponseEntity.status(status).body(err);
 	}
+	
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<Object> hadleAllExceptions(Exception e, HttpServletRequest request){
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		StandardError err = new StandardError(
+				System.currentTimeMillis(), 
+				status.value(), 
+				"Internal Server Error", 
+				e.getMessage(), 
+				request.getRequestURI());
+		return ResponseEntity.status(status).body(err);
+	}
 
 }

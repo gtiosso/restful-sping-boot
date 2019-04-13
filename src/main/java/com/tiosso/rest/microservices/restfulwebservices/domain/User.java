@@ -1,7 +1,9 @@
 package com.tiosso.rest.microservices.restfulwebservices.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -16,6 +18,8 @@ public class User implements Serializable {
 	// Realiza o Parse de String para Data, isso para o retorno do JSON (Rest)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd/MM/yyyy")
 	private Date birthDate;
+	
+	private List<Post> posts = new ArrayList<>();
 
 	public User() {
 	}
@@ -58,6 +62,14 @@ public class User implements Serializable {
 	public void setBirthDate(Date birthDate) {
 		this.birthDate = birthDate;
 	}
+	
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
 
 	@Override
 	public int hashCode() {
@@ -86,7 +98,8 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", email=" + email + ", birthDate=" + birthDate + "]";
+		return "User [id=" + id + ", name=" + name + ", email=" + email + ", birthDate=" + birthDate + ", posts="
+				+ posts + "]";
 	}
 
 }

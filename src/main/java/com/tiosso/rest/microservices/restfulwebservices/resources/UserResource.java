@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.tiosso.rest.microservices.restfulwebservices.domain.Post;
 import com.tiosso.rest.microservices.restfulwebservices.domain.User;
+import com.tiosso.rest.microservices.restfulwebservices.services.PostService;
 import com.tiosso.rest.microservices.restfulwebservices.services.UserService;
 
 @RestController
@@ -24,6 +26,9 @@ public class UserResource {
 	
 	@Autowired
 	private UserService service;
+	
+	@Autowired 
+	private PostService postService;
 	
 	@GetMapping
 	public ResponseEntity<Set<User>> findAll() {
@@ -39,7 +44,7 @@ public class UserResource {
 	
 	@PostMapping
 	public ResponseEntity<Void> addUser(@RequestBody User obj){
-		service.addUser(obj);
+		service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
@@ -48,14 +53,38 @@ public class UserResource {
 	public ResponseEntity<Void> updateUser(@PathVariable Integer id, @RequestBody User obj){
 		service.findById(id);
 		obj.setId(id);
-		service.updateUser(obj);
+		service.update(obj);
 		return ResponseEntity.ok().build();
 	}
 	
 	@DeleteMapping(path = "/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
 		service.findById(id);
-		service.removeUser(id);
+		service.delete(id);
 		return ResponseEntity.noContent().build();
+	}
+	
+	// DEFININDO POSTS
+	
+	@GetMapping(path = "/{id}/posts")
+	public ResponseEntity<Set<Post>> findByAuthorId(@PathVariable Integer id) {
+		service.findById(id);
+		Set<Post> list = postService.findByAuthorId(id);
+		return ResponseEntity.ok().body(list);
+	}
+	
+	@GetMapping(path = "/{id}/posts/{postId}")
+	public ResponseEntity<Post> findByPostId(@PathVariable Integer id, @PathVariable Integer postId) {
+		Post obj = postService.findByAuthorIdPostId(id, postId);
+		return ResponseEntity.ok().body(obj);
+	}
+	
+	@PostMapping(path = "/{id}/posts")
+	public ResponseEntity<Void> addUser(@PathVariable Integer id, @RequestBody Post obj){
+		User user = service.findById(id);
+		postService.insertFromUser(obj, id, user);
+		service.updateUserPost(user, obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).build();
 	}
 }

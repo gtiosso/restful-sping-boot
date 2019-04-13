@@ -5,6 +5,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tiosso.rest.microservices.restfulwebservices.domain.Post;
 import com.tiosso.rest.microservices.restfulwebservices.domain.User;
 import com.tiosso.rest.microservices.restfulwebservices.repository.UserRepository;
 import com.tiosso.rest.microservices.restfulwebservices.services.exceptions.BadRequestException;
@@ -19,7 +20,7 @@ public class UserService {
 	private UserRepository repo;
 	
 	
-	public void addUser(User obj) {
+	public void insert(User obj) {
 		// Validando se email ja existe
 		if(repo.findAll().stream().anyMatch(x -> x.getEmail().equals(obj.getEmail()))) { 
 			throw new ConflictException("ERROR: Conflict  - Email already exist");
@@ -34,7 +35,7 @@ public class UserService {
 		if (obj.getBirthDate() == null) {
 			throw new BadRequestException("ERROR: Bad Request  - Field birthDate is null");
 		}
-		repo.addUser(obj);
+		repo.insert(obj);
 	}
 	
 	public Set<User> findAll(){
@@ -50,12 +51,15 @@ public class UserService {
 		return obj;
 	}
 	
-	public void updateUser(User obj) {
-		repo.updateUser(obj);
+	public void update(User obj) {
+		repo.update(obj);
 	}
 	
-	public void removeUser(Integer id) {
-		repo.removeUser(id);
+	public void delete(Integer id) {
+		repo.delete(id);
 	}
 	
+	public void updateUserPost(User obj, Post post) {
+		repo.updateUserPost(obj, post);
+	}
 }

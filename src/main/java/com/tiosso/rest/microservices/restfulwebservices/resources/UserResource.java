@@ -1,11 +1,15 @@
 package com.tiosso.rest.microservices.restfulwebservices.resources;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 import java.net.URI;
 import java.util.Set;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,9 +43,19 @@ public class UserResource {
 	}
 	
 	@GetMapping(path = "/{id}")
-	public ResponseEntity<User> findById(@PathVariable Integer id) {
+	public ResponseEntity<EntityModel<User>> findById(@PathVariable Integer id) {
 		User obj = service.findById(id);
-		return ResponseEntity.ok().body(obj);
+		
+		// Aplicando HATEOAS
+		EntityModel<User> resource = new EntityModel<User>(obj);
+		WebMvcLinkBuilder linkToAllUsers = linkTo(methodOn(this.getClass()).findAll());
+		WebMvcLinkBuilder linkToDeleteUser = linkTo(methodOn(this.getClass()).deleteUser(id));
+		WebMvcLinkBuilder linkToUpdateUser = linkTo(methodOn(this.getClass()).updateUser(id, obj));
+		resource.add(linkToAllUsers.withRel("All-Users"));
+		resource.add(linkToDeleteUser.withRel("Delete-User"));
+		resource.add(linkToUpdateUser.withRel("Update-User"));
+		
+		return ResponseEntity.ok().body(resource);
 	}
 	
 	@PostMapping

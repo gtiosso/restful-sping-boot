@@ -19,7 +19,6 @@ public class PostService {
 	@Autowired
 	private PostRepository repo;
 	
-	
 	public void insert(Post obj) {
 		repo.insert(obj);
 	}
@@ -70,7 +69,8 @@ public class PostService {
 		
 		
 		repo.insertFromUser(obj, id);
-		
 	}
+
+
 	
 }

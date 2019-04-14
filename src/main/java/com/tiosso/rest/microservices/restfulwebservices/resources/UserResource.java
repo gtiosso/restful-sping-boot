@@ -3,6 +3,8 @@ package com.tiosso.rest.microservices.restfulwebservices.resources;
 import java.net.URI;
 import java.util.Set;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,7 +45,7 @@ public class UserResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> addUser(@RequestBody User obj){
+	public ResponseEntity<Void> addUser(@Valid @RequestBody User obj){
 		service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
@@ -83,7 +85,6 @@ public class UserResource {
 	public ResponseEntity<Void> addUser(@PathVariable Integer id, @RequestBody Post obj){
 		User user = service.findById(id);
 		postService.insertFromUser(obj, id, user);
-		service.updateUserPost(user, obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}

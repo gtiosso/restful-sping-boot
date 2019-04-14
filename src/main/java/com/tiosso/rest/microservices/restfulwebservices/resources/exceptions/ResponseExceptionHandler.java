@@ -2,11 +2,14 @@ package com.tiosso.rest.microservices.restfulwebservices.resources.exceptions;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.tiosso.rest.microservices.restfulwebservices.services.exceptions.BadRequestException;
@@ -25,7 +28,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		StandardError err = new StandardError(
 				System.currentTimeMillis(), 
 				status.value(), 
-				"Not Found", 
+				status.getReasonPhrase(), 
 				e.getMessage(), 
 				request.getRequestURI());
 		
@@ -38,7 +41,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		StandardError err = new StandardError(
 				System.currentTimeMillis(), 
 				status.value(), 
-				"Bad Rquest", 
+				status.getReasonPhrase(), 
 				e.getMessage(), 
 				request.getRequestURI());
 		
@@ -51,7 +54,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 		StandardError err = new StandardError(
 				System.currentTimeMillis(), 
 				status.value(), 
-				"Conflict", 
+				status.getReasonPhrase(), 
 				e.getMessage(), 
 				request.getRequestURI());
 		
@@ -59,14 +62,26 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 	
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<Object> hadleAllExceptions(Exception e, HttpServletRequest request){
+	public ResponseEntity<Object> hadleAllExceptions(Exception ex, WebRequest request) {
 		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 		StandardError err = new StandardError(
 				System.currentTimeMillis(), 
 				status.value(), 
-				"Internal Server Error", 
-				e.getMessage(), 
-				request.getRequestURI());
+				status.getReasonPhrase(), 
+				ex.getMessage(), 
+				request.getContextPath());
+		return ResponseEntity.status(status).body(err);
+	}
+	
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(
+			MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+		StandardError err = new StandardError(
+				System.currentTimeMillis(), 
+				status.value(), 
+				status.getReasonPhrase(), 
+				ex.getBindingResult().toString(), 
+				request.getContextPath());
 		return ResponseEntity.status(status).body(err);
 	}
 

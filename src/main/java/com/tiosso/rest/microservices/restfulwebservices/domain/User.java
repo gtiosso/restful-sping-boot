@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class User implements Serializable {
@@ -12,9 +17,14 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
+	@Size(max = 30, message = "Name should have 30 char atMax!")
+	@NotNull(message = "Name can not be null!")
 	private String name;
+	@NotNull(message = "Email can not be null!")
+	@Pattern(regexp = "[a-z0-9]+(([\\.\\-][a-z0-9]+)+)?[\\@][a-z]+(([\\.][a-z]+)+)?", message = "Email format is wrong!")
 	private String email;
 	
+	@Past
 	// Realiza o Parse de String para Data, isso para o retorno do JSON (Rest)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd/MM/yyyy")
 	private Date birthDate;

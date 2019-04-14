@@ -5,13 +5,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.tiosso.rest.microservices.restfulwebservices.domain.Post;
 import com.tiosso.rest.microservices.restfulwebservices.domain.User;
+import com.tiosso.rest.microservices.restfulwebservices.services.listeners.DataChangeListener;
 
 @Component
-public class UserRepository {
+public class UserRepository  implements DataChangeListener {
+	
+	@Autowired
+	private PostRepository repo;
 	
 	private Integer idCounter = 0;
 	private Set<User> userSet = new HashSet<>();
@@ -30,6 +35,7 @@ public class UserRepository {
 	public User findById(Integer id) {
 		for (User obj : userSet) {
 			if (obj.getId() == id) {
+				repo.subscribeDataChangeListener(this);
 				return obj;
 			}
 		}
@@ -50,10 +56,11 @@ public class UserRepository {
 		userSet.removeIf(x -> x.getId() == id);
 	}
 	
-	public void updateUserPost(User obj, Post post) {
+	@Override
+	public void onDataChanged(Post post) {
 		List<Post> posts = new ArrayList<>();
 		for (User user : userSet) {
-			if (obj.getId() == user.getId()) {
+			if (post.getAuthor().getId() == user.getId()) {
 				for (Post item : user.getPosts()) {
 					posts.add(item);
 				}

@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 // Criando uma Classe que implementa os contratos do WebMvcConfigurer
 
 @Configuration
-public class YamlConfiguration implements WebMvcConfigurer {
+public class YamlConfig implements WebMvcConfigurer {
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(new YamlJackson2HttpMessageConverter());

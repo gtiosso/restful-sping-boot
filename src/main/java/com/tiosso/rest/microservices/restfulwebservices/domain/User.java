@@ -12,6 +12,10 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(description = "All details of users")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -19,14 +23,17 @@ public class User implements Serializable {
 	private Integer id;
 	@Size(max = 30, message = "Name should have 30 char atMax!")
 	@NotNull(message = "Name can not be null!")
+	@ApiModelProperty(notes = "Name can not be null and should have until 30 chars")
 	private String name;
 	@NotNull(message = "Email can not be null!")
 	@Pattern(regexp = "[a-z0-9]+(([\\.\\-][a-z0-9]+)+)?[\\@][a-z]+(([\\.][a-z]+)+)?", message = "Email format is wrong!")
+	@ApiModelProperty(notes = "Email can not be null and should have email format")
 	private String email;
 	
 	@Past
 	// Realiza o Parse de String para Data, isso para o retorno do JSON (Rest)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd/MM/yyyy")
+	@ApiModelProperty(notes = "BirthDate should be in the past")
 	private Date birthDate;
 	
 	private List<Post> posts = new ArrayList<>();
